@@ -1,0 +1,76 @@
+<html>
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="ここにページの概要が入ります。">
+
+        <title>PyScriptテスト</title>
+        <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+        <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+        <py-env>
+            - matplotlib
+            - numpy
+        </py-env>
+</head>
+
+<body>
+
+<py-script>
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+def lorenz(x, y, z, s=10, r=28, b=2.667):
+    """
+    Given:
+       x, y, z: a point of interest in three dimensional space
+       s, r, b: parameters defining the lorenz attractor
+    Returns:
+       x_dot, y_dot, z_dot: values of the lorenz attractor's partial
+           derivatives at the point x, y, z
+    """
+    x_dot = s*(y - x)
+    y_dot = r*x - y - x*z
+    z_dot = x*y - b*z
+    return x_dot, y_dot, z_dot
+
+
+dt = 0.01
+num_steps = 1000
+
+# Need one more for the initial values
+xs = np.empty(num_steps + 1)
+ys = np.empty(num_steps + 1)
+zs = np.empty(num_steps + 1)
+tt = np.empty(num_steps+1)
+
+# Set initial values
+xs[0], ys[0], zs[0] = (0., 1., 1.05)
+tt[0]=0
+
+for i in range(num_steps):
+    x_dot, y_dot, z_dot = lorenz(xs[i], ys[i], zs[i])
+    xs[i + 1] = xs[i] + (x_dot * dt)
+    ys[i + 1] = ys[i] + (y_dot * dt)
+    zs[i + 1] = zs[i] + (z_dot * dt)
+    tt[i+1]   =dt*i
+   
+fig,ax=plt.subplots()
+ax = plt.axes(projection='3d')
+
+# Data for a three-dimensional line
+zline = np.linspace(0, 15, 1000)
+xline = np.sin(zline)
+yline = np.cos(zline)
+ax.plot3D(xline, yline, zline, 'gray')
+
+fig
+
+
+
+</py-script>
+
+</body>
+</html>
